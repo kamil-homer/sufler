@@ -1,0 +1,24 @@
+.base {
+  background: #121213;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.content {
+  width: 30rem;
+  display: flex;
+  flex-direction: column;
+}
+
+//    --body-color: #121213;
+//     --font-color: #fff;
+//     --keyboard-default: #818384;
+//     --tile-bad: #3a3a3c;
+//     --sredni-key: #b59f3b;
+//     --dobrze-key: #538d4e;
+//     --key-alternate: #fff;
+//     --border-color: #3a3a3c;
