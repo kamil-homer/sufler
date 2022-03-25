@@ -77,33 +77,25 @@ const Home = () => {
         const lettersWithKnownPosition = knownLetters.filter((letter) => letter.isChecked)
         const lettersWithUnknownPosition = knownLetters.filter((letter) => letter.letter && !letter.isChecked)
 
-        console.log(lettersWithKnownPosition, lettersWithUnknownPosition, filteredWords.length)
-
         let filteredWithPositions = [...filteredWords]
         lettersWithKnownPosition.forEach(({ letter, index }) => {
             const newFiltered = filteredWithPositions.filter((word) => word[index] === letter)
             filteredWithPositions = [...newFiltered]
         })
-        console.log('after known positions: ', filteredWithPositions.length)
-        lettersWithUnknownPosition.forEach(({ letter: knownLetter, index: knownLetterIndex }) => {
-            const newFiltered = filteredWithPositions.filter((word) => {
-                let isWordCorrect = false
-                const wordArray = [...word]
-                wordArray.every((letter, index) => {
-                    const hasFailed = index === knownLetterIndex && letter === knownLetter
-                    if (hasFailed) return false
 
-                    isWordCorrect = index !== knownLetterIndex && letter === knownLetter
-                    return true
-                })
-                isWordCorrect && console.log(isWordCorrect, word)
-                if (isWordCorrect) return word
+        lettersWithUnknownPosition.forEach(({ letter: knownLetter, index: wrongPosition }) => {
+            const newFiltered = filteredWithPositions.filter((word) => {
+
+                const hasKnownLetter = word.includes(knownLetter)
+                if (hasKnownLetter) {
+                    return [...word].indexOf(knownLetter) !== wrongPosition
+                }
                 return false
             })
+
             filteredWithPositions = [...newFiltered]
         })
 
-        console.log(filteredWithPositions)
         setIsListFiltered(true)
         setPossibleWords(filteredWithPositions)
     }
@@ -113,7 +105,7 @@ const Home = () => {
             <div className={styles.content}>
                 <UnusedLetters handleUnusedLetters={handleUnusedLetters} unusedLetters={unusedLetters} />
                 <CorrectLetters handleKnownLetters={handleKnownLetters} knownLetters={knownLetters} />
-                <button onClick={checkPossibleWordsWithUnused}>
+                <button onClick={checkPossibleWordsWithUnused} className={styles.button}>
                     sprawdź słowa
                 </button>
 
