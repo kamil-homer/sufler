@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/sufler/static/css/main.0903a92f.css",
+    "main.js": "/sufler/static/js/main.ae3b1d62.js",
+    "static/js/787.e23d6a0c.chunk.js": "/sufler/static/js/787.e23d6a0c.chunk.js",
+    "index.html": "/sufler/index.html",
+    "main.0903a92f.css.map": "/sufler/static/css/main.0903a92f.css.map",
+    "main.ae3b1d62.js.map": "/sufler/static/js/main.ae3b1d62.js.map",
+    "787.e23d6a0c.chunk.js.map": "/sufler/static/js/787.e23d6a0c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0903a92f.css",
+    "static/js/main.ae3b1d62.js"
+  ]
+}
