@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import allWords from '../../assets/fiveLettersOnly.json'
 
@@ -9,62 +9,100 @@ import styles from './Home.module.scss'
 
 const Home = () => {
     const [possibleWords, setPossibleWords] = useState(allWords)
+    const [isListFiltered, setIsListFiltered] = useState(false)
     const [unusedLetters, setUnusedLetters] = useState([])
-    const [knownLetters, setKnownLetters] = useState({
-        '0': {
+    const [knownLetters, setKnownLetters] = useState([
+        {
             letter: '',
             isChecked: false,
+            index: 0,
         },
-        '1': {
+        {
             letter: '',
             isChecked: false,
+            index: 1,
         },
-        '2': {
+        {
             letter: '',
             isChecked: false,
+            index: 2,
         },
-        '3': {
+        {
             letter: '',
             isChecked: false,
+            index: 3,
         },
-        '4': {
+        {
             letter: '',
             isChecked: false,
+            index: 4,
         },
-    })
+    ])
 
 
     const handleUnusedLetters = (unused) => {
-        console.log(unused, unused.split(''))
         setUnusedLetters(unused)
     }
 
-    const handleKnownLetters = (index, letter = null, isChecked = false) => {
-        console.log(knownLetters[index], index, letter, isChecked)
-        const currentState = { ...knownLetters }
+    const handleKnownLetters = (index, letter, isChecked) => {
+
+        const currentState = [...knownLetters]
         let selectedLetter = currentState[index]
-        if (letter) {
-            selectedLetter = { ...selectedLetter, letter }
-        }
-        else if (isChecked) {
+        const changeOnlyState = letter === null
+        if (changeOnlyState) {
             selectedLetter = { ...selectedLetter, isChecked }
         }
+        if (letter === '' || letter) {
+            selectedLetter = { ...selectedLetter, letter }
+        }
         knownLetters[index] = selectedLetter
-        setKnownLetters({ ...knownLetters })
+        setKnownLetters([...knownLetters])
     }
 
-    const checkPossibleWords = () => {
+    const checkPossibleWordsWithUnused = () => {
         if (unusedLetters.length && possibleWords) {
             const unusedLettersArray = unusedLetters.split('')
-            let filteredWords = []
-            filteredWords = [...possibleWords]
+            let filteredWords = [...possibleWords]
             unusedLettersArray.forEach((letter) => {
                 const newFiltered = filteredWords.filter((word) => !word.includes(letter))
                 filteredWords = [...newFiltered]
             })
-            console.log(possibleWords.length, filteredWords.length)
-            setPossibleWords(filteredWords)
+
+            // step 2: check known letters
+            checkPossibleWordsWithKnownLetters(filteredWords)
         }
+    }
+
+    const checkPossibleWordsWithKnownLetters = (filteredWords) => {
+        const lettersWithKnownPosition = knownLetters.filter((letter) => letter.isChecked)
+        const lettersWithUnknownPosition = knownLetters.filter((letter) => letter.letter && !letter.isChecked)
+
+        console.log(lettersWithKnownPosition, lettersWithUnknownPosition)
+
+        let filteredWithPositions = [...filteredWords]
+        lettersWithKnownPosition.forEach(({ letter, index }) => {
+            const newFiltered = filteredWithPositions.filter((word) => word[index] === letter)
+            filteredWithPositions = [...newFiltered]
+        })
+        lettersWithUnknownPosition.forEach(({ letter: knownLetter, index: knownLetterIndex }) => {
+            const newFiltered = filteredWithPositions.filter((word) => {
+                let isWordCorrect = false
+                const wordArray = [...word]
+                wordArray.every((letter, index) => {
+                    const hasFailed = index === knownLetterIndex && letter === knownLetter
+                    if (hasFailed) return false
+
+                    isWordCorrect = index !== knownLetterIndex && letter === knownLetter
+                    return true
+                })
+                return isWordCorrect && word
+            })
+            filteredWithPositions = [...newFiltered]
+        })
+
+        console.log(filteredWithPositions)
+        setIsListFiltered(true)
+        setPossibleWords(filteredWithPositions)
     }
 
     return (
@@ -72,9 +110,15 @@ const Home = () => {
             <div className={styles.content}>
                 <UnusedLetters handleUnusedLetters={handleUnusedLetters} unusedLetters={unusedLetters} />
                 <CorrectLetters handleKnownLetters={handleKnownLetters} knownLetters={knownLetters} />
-                <button onClick={checkPossibleWords}>
+                <button onClick={checkPossibleWordsWithUnused}>
                     sprawdź słowa
                 </button>
+
+                {isListFiltered && (
+                    <div className={styles.wordsWrapper}>
+                        {possibleWords.map((word) => <pre key={word}>{word}</pre>)}
+                    </div>
+                )}
             </div>
         </div>
     )
