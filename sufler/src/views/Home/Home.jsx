@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+
+import allWords from '../../assets/fiveLettersOnly.json'
+
 import CorrectLetters from '../../components/CorrectLetters/CorrectLetters'
 import UnusedLetters from '../../components/UnusedLetters/UnusedLetters'
 
 import styles from './Home.module.scss'
 
 const Home = () => {
+    const [possibleWords, setPossibleWords] = useState(allWords)
     const [unusedLetters, setUnusedLetters] = useState([])
     const [knownLetters, setKnownLetters] = useState({
         '0': {
@@ -29,7 +33,9 @@ const Home = () => {
         },
     })
 
+
     const handleUnusedLetters = (unused) => {
+        console.log(unused, unused.split(''))
         setUnusedLetters(unused)
     }
 
@@ -47,12 +53,28 @@ const Home = () => {
         setKnownLetters({ ...knownLetters })
     }
 
+    const checkPossibleWords = () => {
+        if (unusedLetters.length && possibleWords) {
+            const unusedLettersArray = unusedLetters.split('')
+            let filteredWords = []
+            filteredWords = [...possibleWords]
+            unusedLettersArray.forEach((letter) => {
+                const newFiltered = filteredWords.filter((word) => !word.includes(letter))
+                filteredWords = [...newFiltered]
+            })
+            console.log(possibleWords.length, filteredWords.length)
+            setPossibleWords(filteredWords)
+        }
+    }
 
     return (
         <div className={styles.base}>
             <div className={styles.content}>
                 <UnusedLetters handleUnusedLetters={handleUnusedLetters} unusedLetters={unusedLetters} />
                 <CorrectLetters handleKnownLetters={handleKnownLetters} knownLetters={knownLetters} />
+                <button onClick={checkPossibleWords}>
+                    sprawdź słowa
+                </button>
             </div>
         </div>
     )
