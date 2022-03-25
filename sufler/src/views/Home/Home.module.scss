@@ -1,3 +1,20 @@
+input[type="text"] {
+  padding: 0;
+  box-sizing: inherit;
+  box-sizing: border-box;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
 .base {
   background: #121213;
   color: #fff;
@@ -6,10 +23,12 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  padding: 1rem;
 }
 
 .content {
-  width: 30rem;
+  width: 100%;
+  max-width: 30rem;
   display: flex;
   flex-direction: column;
 }

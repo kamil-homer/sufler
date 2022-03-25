@@ -6,6 +6,14 @@
   display: flex;
 }
 
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.25rem;
+}
+
 .letterInput {
   width: 80%;
   margin: 2px;

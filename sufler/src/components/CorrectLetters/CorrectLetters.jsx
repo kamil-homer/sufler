@@ -19,7 +19,7 @@ function CorrectLetters({ handleKnownLetters, knownLetters }) {
             })
 
             return (
-                <div key={`inputContainer_${index}`}>
+                <div key={`inputContainer_${index}`} className={styles.inputWrapper}>
                     <input className={inputClassName} maxLength="1" name={`input${index}`} type="text" value={knownLetters[index].letter} onChange={e => handleKnownLetters(index, e.target.value.toLowerCase())}></input>
                     <input className={inputClassName} name={`checkbox${index}`} disabled={!knownLetters[index].letter} type="checkbox" value={knownLetters[index].isChecked} onChange={e => handleKnownLetters(index, null, e.target.checked)}></input>
                 </div>
