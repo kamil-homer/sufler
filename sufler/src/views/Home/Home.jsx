@@ -45,7 +45,6 @@ const Home = () => {
     }
 
     const handleKnownLetters = (index, letter, isChecked) => {
-
         const currentState = [...knownLetters]
         let selectedLetter = currentState[index]
         const changeOnlyState = letter === null
@@ -60,9 +59,10 @@ const Home = () => {
     }
 
     const checkPossibleWordsWithUnused = () => {
-        if (unusedLetters.length && possibleWords) {
+        console.log(possibleWords.length)
+        if (unusedLetters.length) {
             const unusedLettersArray = unusedLetters.split('')
-            let filteredWords = [...possibleWords]
+            let filteredWords = [...allWords]
             unusedLettersArray.forEach((letter) => {
                 const newFiltered = filteredWords.filter((word) => !word.includes(letter))
                 filteredWords = [...newFiltered]
@@ -77,13 +77,14 @@ const Home = () => {
         const lettersWithKnownPosition = knownLetters.filter((letter) => letter.isChecked)
         const lettersWithUnknownPosition = knownLetters.filter((letter) => letter.letter && !letter.isChecked)
 
-        console.log(lettersWithKnownPosition, lettersWithUnknownPosition)
+        console.log(lettersWithKnownPosition, lettersWithUnknownPosition, filteredWords.length)
 
         let filteredWithPositions = [...filteredWords]
         lettersWithKnownPosition.forEach(({ letter, index }) => {
             const newFiltered = filteredWithPositions.filter((word) => word[index] === letter)
             filteredWithPositions = [...newFiltered]
         })
+        console.log('after known positions: ', filteredWithPositions.length)
         lettersWithUnknownPosition.forEach(({ letter: knownLetter, index: knownLetterIndex }) => {
             const newFiltered = filteredWithPositions.filter((word) => {
                 let isWordCorrect = false
@@ -95,7 +96,9 @@ const Home = () => {
                     isWordCorrect = index !== knownLetterIndex && letter === knownLetter
                     return true
                 })
-                return isWordCorrect && word
+                isWordCorrect && console.log(isWordCorrect, word)
+                if (isWordCorrect) return word
+                return false
             })
             filteredWithPositions = [...newFiltered]
         })
